@@ -579,7 +579,10 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   }
 
   #sentences {
-    padding: clamp(48px, 16vh, 120px) clamp(20px, 9vw, 52px) clamp(200px, 56vh, 360px);
+    padding-top: calc(var(--sentences-padding-top) + clamp(48px, 16vh, 120px));
+    padding-right: clamp(20px, 9vw, 52px);
+    padding-bottom: calc(var(--sentences-padding-bottom) + clamp(200px, 56vh, 360px));
+    padding-left: clamp(20px, 9vw, 52px);
   }
 
   .sentence {
