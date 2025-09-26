@@ -7,6 +7,7 @@
   --text-faint: rgba(255, 255, 255, 0.26);
   --viewport-unit: 1vh;
   --overscroll-bleed: clamp(120px, calc(var(--viewport-unit) * 16), 240px);
+  --sentence-fade-height: clamp(120px, calc(var(--viewport-unit) * 24), 220px);
   --font-brand: 'Outfit', 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont,
     'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
   --font-serif: 'SF Pro Text', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
@@ -92,9 +93,7 @@ body::after {
   inset: calc(var(--overscroll-bleed) * -1) 0;
   pointer-events: none;
   z-index: 2;
-  background-image:
-    linear-gradient(to bottom, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0) 60%),
-    linear-gradient(to top, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0) 60%),
+  background:
     linear-gradient(
       to top,
       rgba(5, 5, 5, 0.88) 0%,
@@ -102,15 +101,6 @@ body::after {
       rgba(5, 5, 5, 0.18) 85%,
       rgba(5, 5, 5, 0) 100%
     );
-  background-position:
-    center var(--overscroll-bleed),
-    center calc(100% - var(--overscroll-bleed)),
-    center calc(100% - var(--overscroll-bleed));
-  background-repeat: no-repeat;
-  background-size:
-    100% clamp(160px, calc(var(--viewport-unit) * 34), 360px),
-    100% clamp(160px, calc(var(--viewport-unit) * 34), 360px),
-    100% clamp(200px, calc(var(--viewport-unit) * 42), 420px);
 }
 
 .backdrop {
@@ -264,6 +254,27 @@ body.is-menu-closing .site-menu {
 main {
   display: block;
   min-height: 100vh;
+}
+
+main::before,
+main::after {
+  content: '';
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: var(--sentence-fade-height);
+  pointer-events: none;
+  z-index: 5;
+}
+
+main::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--background) 0%, rgba(5, 5, 5, 0) 70%);
+}
+
+main::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--background) 0%, rgba(5, 5, 5, 0) 70%);
 }
 
 .site-header {
