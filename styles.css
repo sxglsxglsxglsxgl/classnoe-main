@@ -7,8 +7,9 @@
   --text-faint: rgba(255, 255, 255, 0.26);
   --viewport-unit: 1vh;
   --overscroll-bleed: clamp(120px, calc(var(--viewport-unit) * 16), 240px);
-  --sentence-fade-height: clamp(160px, calc(var(--viewport-unit) * 32), 260px);
-  --sentence-fade-softness: clamp(48px, calc(var(--viewport-unit) * 6), 96px);
+  --sentence-fade-top-edge: clamp(112px, calc(var(--viewport-unit) * 26), 164px);
+  --sentence-fade-bottom-edge: clamp(112px, calc(var(--viewport-unit) * 26), 164px);
+  --sentence-fade-band: clamp(48px, calc(var(--viewport-unit) * 6), 96px);
   --font-brand: 'Outfit', 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont,
     'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
   --font-serif: 'SF Pro Text', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
@@ -264,23 +265,23 @@ main::after {
 
 main::before {
   top: 0;
-  height: var(--sentence-fade-height);
+  height: calc(var(--sentence-fade-top-edge) + var(--sentence-fade-band));
   background: linear-gradient(
     to bottom,
     var(--background) 0,
-    var(--background) calc(var(--sentence-fade-height) - var(--sentence-fade-softness)),
-    rgba(5, 5, 5, 0) var(--sentence-fade-height)
+    var(--background) var(--sentence-fade-top-edge),
+    rgba(5, 5, 5, 0) calc(var(--sentence-fade-top-edge) + var(--sentence-fade-band))
   );
 }
 
 main::after {
   bottom: 0;
-  height: var(--sentence-fade-height);
+  height: calc(var(--sentence-fade-bottom-edge) + var(--sentence-fade-band));
   background: linear-gradient(
     to top,
     var(--background) 0,
-    var(--background) calc(var(--sentence-fade-height) - var(--sentence-fade-softness)),
-    rgba(5, 5, 5, 0) var(--sentence-fade-height)
+    var(--background) var(--sentence-fade-bottom-edge),
+    rgba(5, 5, 5, 0) calc(var(--sentence-fade-bottom-edge) + var(--sentence-fade-band))
   );
 }
 
@@ -449,9 +450,9 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   width: min(920px, 100%);
   margin: 0 auto;
   padding:
-    calc(var(--sentence-fade-height) + clamp(48px, 18vh, 180px))
+    calc(var(--sentence-fade-top-edge) + var(--sentence-fade-band) + clamp(48px, 18vh, 180px))
     clamp(24px, 8vw, 140px)
-    calc(var(--sentence-fade-height) + clamp(160px, 40vh, 360px));
+    calc(var(--sentence-fade-bottom-edge) + var(--sentence-fade-band) + clamp(160px, 40vh, 360px));
   perspective: 1400px;
 }
 
