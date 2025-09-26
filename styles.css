@@ -7,8 +7,9 @@
   --text-faint: rgba(255, 255, 255, 0.26);
   --viewport-unit: 1vh;
   --overscroll-bleed: clamp(120px, calc(var(--viewport-unit) * 16), 240px);
-  --sentence-fade-top: clamp(120px, calc(var(--viewport-unit) * 24), 220px);
-  --sentence-fade-bottom: clamp(220px, calc(var(--viewport-unit) * 52), 440px);
+  --sentence-fade-top-boundary: clamp(160px, calc(var(--viewport-unit) * 28), 240px);
+  --sentence-fade-bottom-boundary: clamp(220px, calc(var(--viewport-unit) * 48), 360px);
+  --sentence-fade-softness: clamp(48px, calc(var(--viewport-unit) * 9), 96px);
   --font-brand: 'Outfit', 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont,
     'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
   --font-serif: 'SF Pro Text', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
@@ -269,22 +270,24 @@ main::after {
 
 main::before {
   top: 0;
-  height: var(--sentence-fade-top);
+  height: calc(var(--sentence-fade-top-boundary) + var(--sentence-fade-softness));
   background: linear-gradient(
     to bottom,
     var(--background) 0%,
-    rgba(5, 5, 5, 0.62) 55%,
+    rgba(5, 5, 5, 0.9) 38%,
+    rgba(5, 5, 5, 0.62) 66%,
     rgba(5, 5, 5, 0) 100%
   );
 }
 
 main::after {
   bottom: 0;
-  height: var(--sentence-fade-bottom);
+  height: calc(var(--sentence-fade-bottom-boundary) + var(--sentence-fade-softness));
   background: linear-gradient(
     to top,
     var(--background) 0%,
-    rgba(5, 5, 5, 0.62) 55%,
+    rgba(5, 5, 5, 0.9) 38%,
+    rgba(5, 5, 5, 0.62) 66%,
     rgba(5, 5, 5, 0) 100%
   );
 }
@@ -455,6 +458,32 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   margin: 0 auto;
   padding: clamp(48px, 22vh, 200px) clamp(24px, 8vw, 140px) clamp(200px, 52vh, 420px);
   perspective: 1400px;
+  --fade-top-stop: var(--sentence-fade-top-boundary);
+  --fade-bottom-stop: var(--sentence-fade-bottom-boundary);
+  --fade-softness: var(--sentence-fade-softness);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(var(--fade-top-stop) - var(--fade-softness)),
+    black calc(var(--fade-top-stop) + var(--fade-softness)),
+    black calc(100% - var(--fade-bottom-stop) - var(--fade-softness)),
+    transparent calc(100% - var(--fade-bottom-stop) + var(--fade-softness)),
+    transparent 100%
+  );
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(var(--fade-top-stop) - var(--fade-softness)),
+    black calc(var(--fade-top-stop) + var(--fade-softness)),
+    black calc(100% - var(--fade-bottom-stop) - var(--fade-softness)),
+    transparent calc(100% - var(--fade-bottom-stop) + var(--fade-softness)),
+    transparent 100%
+  );
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  mask-mode: alpha;
 }
 
 .sentence {
