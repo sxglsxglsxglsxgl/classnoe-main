@@ -7,9 +7,8 @@
   --text-faint: rgba(255, 255, 255, 0.26);
   --viewport-unit: 1vh;
   --overscroll-bleed: clamp(120px, calc(var(--viewport-unit) * 16), 240px);
-  --sentence-fade-top-edge: clamp(160px, calc(var(--viewport-unit) * 28), 240px);
-  --sentence-fade-bottom-edge: clamp(220px, calc(var(--viewport-unit) * 48), 360px);
-  --sentence-fade-band: clamp(56px, calc(var(--viewport-unit) * 10), 112px);
+  --sentence-fade-height: clamp(160px, calc(var(--viewport-unit) * 32), 260px);
+  --sentence-fade-softness: clamp(48px, calc(var(--viewport-unit) * 6), 96px);
   --font-brand: 'Outfit', 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont,
     'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
   --font-serif: 'SF Pro Text', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
@@ -96,13 +95,8 @@ body::after {
   pointer-events: none;
   z-index: 2;
   background:
-    linear-gradient(
-      to top,
-      rgba(5, 5, 5, 0.88) 0%,
-      rgba(5, 5, 5, 0.52) 45%,
-      rgba(5, 5, 5, 0.18) 85%,
-      rgba(5, 5, 5, 0) 100%
-    );
+    radial-gradient(140% 120% at 50% 0%, rgba(5, 5, 5, 0.6), rgba(5, 5, 5, 0)),
+    radial-gradient(140% 120% at 50% 100%, rgba(5, 5, 5, 0.45), rgba(5, 5, 5, 0));
 }
 
 .backdrop {
@@ -270,25 +264,23 @@ main::after {
 
 main::before {
   top: 0;
-  height: calc(var(--sentence-fade-top-edge) + var(--sentence-fade-band));
+  height: var(--sentence-fade-height);
   background: linear-gradient(
     to bottom,
-    var(--background) 0%,
-    rgba(5, 5, 5, 0.9) 38%,
-    rgba(5, 5, 5, 0.62) 66%,
-    rgba(5, 5, 5, 0) 100%
+    var(--background) 0,
+    var(--background) calc(var(--sentence-fade-height) - var(--sentence-fade-softness)),
+    rgba(5, 5, 5, 0) var(--sentence-fade-height)
   );
 }
 
 main::after {
   bottom: 0;
-  height: calc(var(--sentence-fade-bottom-edge) + var(--sentence-fade-band));
+  height: var(--sentence-fade-height);
   background: linear-gradient(
     to top,
-    var(--background) 0%,
-    rgba(5, 5, 5, 0.9) 38%,
-    rgba(5, 5, 5, 0.62) 66%,
-    rgba(5, 5, 5, 0) 100%
+    var(--background) 0,
+    var(--background) calc(var(--sentence-fade-height) - var(--sentence-fade-softness)),
+    rgba(5, 5, 5, 0) var(--sentence-fade-height)
   );
 }
 
@@ -456,34 +448,11 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   align-items: stretch;
   width: min(920px, 100%);
   margin: 0 auto;
-  padding: clamp(48px, 22vh, 200px) clamp(24px, 8vw, 140px) clamp(200px, 52vh, 420px);
+  padding:
+    calc(var(--sentence-fade-height) + clamp(48px, 18vh, 180px))
+    clamp(24px, 8vw, 140px)
+    calc(var(--sentence-fade-height) + clamp(160px, 40vh, 360px));
   perspective: 1400px;
-  --fade-top-edge: var(--sentence-fade-top-edge);
-  --fade-bottom-edge: var(--sentence-fade-bottom-edge);
-  --fade-band: var(--sentence-fade-band);
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent var(--fade-top-edge),
-    black calc(var(--fade-top-edge) + var(--fade-band)),
-    black calc(100% - var(--fade-bottom-edge) - var(--fade-band)),
-    transparent calc(100% - var(--fade-bottom-edge)),
-    transparent 100%
-  );
-  -webkit-mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent var(--fade-top-edge),
-    black calc(var(--fade-top-edge) + var(--fade-band)),
-    black calc(100% - var(--fade-bottom-edge) - var(--fade-band)),
-    transparent calc(100% - var(--fade-bottom-edge)),
-    transparent 100%
-  );
-  mask-size: 100% 100%;
-  mask-repeat: no-repeat;
-  mask-mode: alpha;
 }
 
 .sentence {
