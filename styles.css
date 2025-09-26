@@ -273,10 +273,11 @@ main::before {
   height: calc(var(--sentence-fade-top-edge) + var(--sentence-fade-band));
   background: linear-gradient(
     to bottom,
-    var(--background) 0%,
-    rgba(5, 5, 5, 0.9) 38%,
-    rgba(5, 5, 5, 0.62) 66%,
-    rgba(5, 5, 5, 0) 100%
+    var(--background) 0,
+    var(--background) var(--sentence-fade-top-edge),
+    rgba(5, 5, 5, 0.9) calc(var(--sentence-fade-top-edge) + var(--sentence-fade-band) * 0.25),
+    rgba(5, 5, 5, 0.62) calc(var(--sentence-fade-top-edge) + var(--sentence-fade-band) * 0.66),
+    rgba(5, 5, 5, 0) calc(var(--sentence-fade-top-edge) + var(--sentence-fade-band))
   );
 }
 
@@ -285,10 +286,11 @@ main::after {
   height: calc(var(--sentence-fade-bottom-edge) + var(--sentence-fade-band));
   background: linear-gradient(
     to top,
-    var(--background) 0%,
-    rgba(5, 5, 5, 0.9) 38%,
-    rgba(5, 5, 5, 0.62) 66%,
-    rgba(5, 5, 5, 0) 100%
+    var(--background) 0,
+    var(--background) var(--sentence-fade-bottom-edge),
+    rgba(5, 5, 5, 0.9) calc(var(--sentence-fade-bottom-edge) + var(--sentence-fade-band) * 0.25),
+    rgba(5, 5, 5, 0.62) calc(var(--sentence-fade-bottom-edge) + var(--sentence-fade-band) * 0.66),
+    rgba(5, 5, 5, 0) calc(var(--sentence-fade-bottom-edge) + var(--sentence-fade-band))
   );
 }
 
