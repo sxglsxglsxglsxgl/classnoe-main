@@ -270,7 +270,8 @@ main::before {
     to bottom,
     var(--background) 0,
     var(--background) var(--sentence-fade-top-edge),
-    rgba(5, 5, 5, 0) calc(var(--sentence-fade-top-edge) + var(--sentence-fade-band))
+    rgba(5, 5, 5, 0) calc(var(--sentence-fade-top-edge) + var(--sentence-fade-band)),
+    rgba(5, 5, 5, 0) 100%
   );
 }
 
@@ -281,7 +282,8 @@ main::after {
     to top,
     var(--background) 0,
     var(--background) var(--sentence-fade-bottom-edge),
-    rgba(5, 5, 5, 0) calc(var(--sentence-fade-bottom-edge) + var(--sentence-fade-band))
+    rgba(5, 5, 5, 0) calc(var(--sentence-fade-bottom-edge) + var(--sentence-fade-band)),
+    rgba(5, 5, 5, 0) 100%
   );
 }
 
@@ -449,10 +451,12 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   align-items: stretch;
   width: min(920px, 100%);
   margin: 0 auto;
+  --sentences-padding-top: calc(var(--sentence-fade-top-edge) + var(--sentence-fade-band));
+  --sentences-padding-bottom: calc(var(--sentence-fade-bottom-edge) + var(--sentence-fade-band));
   padding:
-    calc(var(--sentence-fade-top-edge) + var(--sentence-fade-band) + clamp(48px, 18vh, 180px))
+    calc(var(--sentences-padding-top) + clamp(48px, 18vh, 180px))
     clamp(24px, 8vw, 140px)
-    calc(var(--sentence-fade-bottom-edge) + var(--sentence-fade-band) + clamp(160px, 40vh, 360px));
+    calc(var(--sentences-padding-bottom) + clamp(160px, 40vh, 360px));
   perspective: 1400px;
 }
 
