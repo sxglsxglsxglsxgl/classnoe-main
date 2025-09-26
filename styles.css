@@ -7,7 +7,8 @@
   --text-faint: rgba(255, 255, 255, 0.26);
   --viewport-unit: 1vh;
   --overscroll-bleed: clamp(120px, calc(var(--viewport-unit) * 16), 240px);
-  --sentence-fade-height: clamp(120px, calc(var(--viewport-unit) * 24), 220px);
+  --sentence-fade-top: clamp(120px, calc(var(--viewport-unit) * 24), 220px);
+  --sentence-fade-bottom: clamp(220px, calc(var(--viewport-unit) * 52), 440px);
   --font-brand: 'Outfit', 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont,
     'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
   --font-serif: 'SF Pro Text', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
@@ -262,19 +263,30 @@ main::after {
   position: fixed;
   left: 0;
   right: 0;
-  height: var(--sentence-fade-height);
   pointer-events: none;
   z-index: 5;
 }
 
 main::before {
   top: 0;
-  background: linear-gradient(to bottom, var(--background) 0%, rgba(5, 5, 5, 0) 70%);
+  height: var(--sentence-fade-top);
+  background: linear-gradient(
+    to bottom,
+    var(--background) 0%,
+    rgba(5, 5, 5, 0.62) 55%,
+    rgba(5, 5, 5, 0) 100%
+  );
 }
 
 main::after {
   bottom: 0;
-  background: linear-gradient(to top, var(--background) 0%, rgba(5, 5, 5, 0) 70%);
+  height: var(--sentence-fade-bottom);
+  background: linear-gradient(
+    to top,
+    var(--background) 0%,
+    rgba(5, 5, 5, 0.62) 55%,
+    rgba(5, 5, 5, 0) 100%
+  );
 }
 
 .site-header {
