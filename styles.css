@@ -13,6 +13,8 @@
     'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
   --font-serif: 'SF Pro Text', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
   --font-sans: 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
+  --font-lead: 'SF Pro Display', 'SF Pro Text', 'SF Pro', -apple-system, BlinkMacSystemFont,
+    'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
 }
 
 @supports (height: 100dvh) {
@@ -271,72 +273,12 @@ main {
 .site-header {
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
+  align-items: flex-start;
   width: 100%;
-  min-height: calc(var(--viewport-unit) * 100);
-  padding: clamp(32px, 8vh, 96px) clamp(24px, 6vw, 60px);
+  min-height: 0;
+  padding: calc(var(--safe-area-top) + clamp(20px, 6vh, 48px)) clamp(24px, 6vw, 60px) 0;
   z-index: 32;
-}
-
-.site-header__inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(16px, 3vw, 36px);
-  width: min(960px, 100%);
-  pointer-events: auto;
-  text-align: center;
-}
-
-.site-lockup {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(8px, 1.6vw, 16px);
-  transition: opacity 360ms ease-in-out, transform 360ms ease-in-out;
-}
-
-body.has-menu-open .site-lockup,
-body.is-menu-closing .site-lockup {
-  opacity: 0;
-  transform: translateY(-8px);
-  pointer-events: none;
-}
-
-.site-brand {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: none;
-  appearance: none;
-  cursor: pointer;
-  font-family: var(--font-brand);
-  font-size: clamp(21.6px, 5.4vw, 57.6px);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  line-height: 1.05;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.995);
-  text-shadow: 0 0 32px rgba(255, 255, 255, 0.28);
-  text-align: center;
-  white-space: nowrap;
-  transition: color 200ms ease;
-}
-
-.site-brand:hover {
-  color: rgba(255, 255, 255, 1);
-}
-
-.site-brand:focus-visible {
-  outline: none;
-  color: rgba(255, 255, 255, 1);
-  text-shadow: 0 0 26px rgba(255, 255, 255, 0.35);
 }
 
 .site-menu-toggle {
@@ -470,6 +412,16 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   text-wrap: balance;
 }
 
+.sentence--lead {
+  font-family: var(--font-lead);
+  font-size: clamp(40px, 7vw, 96px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-shadow: 0 0 36px rgba(255, 255, 255, 0.32);
+  color: rgba(255, 255, 255, 0.88);
+}
+
 .sentence.is-visible {
   opacity: 0.5;
   color: rgba(255, 255, 255, 0.62);
@@ -540,16 +492,12 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
 
 @media (max-width: 720px) {
   .site-header {
-    padding: clamp(36px, 14vh, 80px) clamp(20px, 10vw, 40px);
+    padding: calc(var(--safe-area-top) + clamp(18px, 12vh, 52px)) clamp(20px, 10vw, 40px) 0;
   }
 
-  .site-header__inner {
-    gap: clamp(24px, 8vw, 40px);
-  }
-
-  .site-brand {
-    font-size: clamp(22px, 8.4vw, 36px);
-    letter-spacing: 0.045em;
+  .sentence--lead {
+    font-size: clamp(32px, 12vw, 72px);
+    letter-spacing: 0.1em;
   }
 
   .site-menu-toggle {
