@@ -21,30 +21,20 @@
   <div class="backdrop" aria-hidden="true"></div>
 
   <header class="site-header">
-    <div class="site-header__inner">
-      <button
-        class="site-brand"
-        type="button"
-        data-scroll-to-sentences
-        aria-label="CLASSNOE MESTO — scroll to first message"
-      >
-        CLASSNOE MESTO
-      </button>
-      <button
-        class="site-menu-toggle"
-        type="button"
-        data-menu-toggle
-        aria-expanded="false"
-        aria-controls="site-menu"
-        aria-label="Open menu"
-      >
-        <span class="site-menu-toggle__icon" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-      </button>
-    </div>
+    <button
+      class="site-menu-toggle"
+      type="button"
+      data-menu-toggle
+      aria-expanded="false"
+      aria-controls="site-menu"
+      aria-label="Open menu"
+    >
+      <span class="site-menu-toggle__icon" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
   </header>
 
   <div
@@ -85,7 +75,28 @@
 
   <main id="content" aria-labelledby="content-title">
     <h1 id="content-title" class="visually-hidden">CLASSNOE MESTO inspired narrative</h1>
-    <section id="sentences" role="list" aria-live="polite"></section>
+    <section id="sentences" role="list" aria-live="polite">
+      <p class="sentence sentence--lead" role="listitem">CLASSNOE MESTO</p>
+      <p class="sentence" role="listitem">
+        CLASSNOE MESTO is a creative collective of designers, architects, musicians, filmmakers,
+        writers, and engineers.
+      </p>
+      <p class="sentence" role="listitem">
+        We are fascinated by the traditions of craft and defined by the pursuit of excellence.
+      </p>
+      <p class="sentence" role="listitem">
+        We imagine and build products, experiences, and organizations in close partnership with
+        leaders we admire.
+      </p>
+      <p class="sentence" role="listitem">
+        Our curiosity leads us to learn, to question, and to design with a respect for materials and
+        for the people who use them.
+      </p>
+      <p class="sentence" role="listitem">
+        We work from Saint Petersburg, collaborating around the world on projects that make life a
+        little more thoughtful.
+      </p>
+    </section>
   </main>
 
   <footer class="site-footer" aria-label="Footer">
