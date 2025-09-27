@@ -42,19 +42,20 @@
 html,
 body {
   margin: 0;
-  height: 100%;
   background: #000;
   color: #fff;
   font-family: Arial, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
 html {
+  min-height: 100%;
   background: var(--background);
 }
 
 body {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--background);
   color: var(--text-strong);
   font-family: var(--font-serif);
@@ -70,8 +71,8 @@ body.is-menu-closing {
 }
 
 .content {
-  min-height: 100dvh;
   min-height: 100vh;
+  min-height: 100dvh;
   box-sizing: border-box;
   padding:
     calc(16px + var(--safe-top))

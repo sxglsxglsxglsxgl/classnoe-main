@@ -24,6 +24,22 @@
   }
 
   let baseInsets = readBaseInsets();
+  let lastReported = '';
+
+  function report(source) {
+    const styles = getComputedStyle(root);
+    const current = {
+      top: styles.getPropertyValue('--safe-top').trim(),
+      right: styles.getPropertyValue('--safe-right').trim(),
+      bottom: styles.getPropertyValue('--safe-bottom').trim(),
+      left: styles.getPropertyValue('--safe-left').trim(),
+    };
+    const snapshot = JSON.stringify(current);
+    if (snapshot !== lastReported) {
+      console.info(`[safe-area] ${source}`, current);
+      lastReported = snapshot;
+    }
+  }
 
   function update() {
     const top = vv ? Math.max(baseInsets.top, Math.max(0, vv.offsetTop)) : baseInsets.top;
@@ -45,6 +61,7 @@
     root.style.setProperty('--safe-bottom', bottom + 'px');
     root.style.setProperty('--safe-left', left + 'px');
     root.style.setProperty('--safe-right', right + 'px');
+    report('update');
   }
 
   update();
