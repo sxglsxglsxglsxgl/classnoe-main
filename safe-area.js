@@ -9,10 +9,9 @@
     const right = vv ? Math.max(0, window.innerWidth - (vv.width + vv.offsetLeft)) : null;
 
     function setVar(name, val) {
-      if (val === null) return;
-      const current = getComputedStyle(root).getPropertyValue(name).trim();
-      const currentNumber = current ? parseFloat(current) : NaN;
-      if (!current || (Number.isFinite(currentNumber) && currentNumber === 0 && val > 0)) {
+      if (val == null) return;
+      const current = parseFloat(getComputedStyle(root).getPropertyValue(name)) || 0;
+      if (Math.abs(current - val) > 0.5) {
         root.style.setProperty(name, val + 'px');
       }
     }
