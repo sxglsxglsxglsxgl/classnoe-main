@@ -61,9 +61,30 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+.safe-frame {
+  position: fixed;
+  top: var(--safe-top);
+  right: var(--safe-right);
+  bottom: var(--safe-bottom);
+  left: var(--safe-left);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  contain: layout paint size;
+  z-index: 0;
+}
+
 body.has-menu-open,
 body.is-menu-closing {
   overflow: hidden;
+}
+
+.safe-frame .content {
+  position: relative;
+  flex: 1 1 auto;
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .content {
@@ -71,11 +92,8 @@ body.is-menu-closing {
   min-height: 100vh;
   min-height: 100svh;
   min-height: 100dvh;
-  padding:
-    calc(16px + var(--safe-top))
-    calc(16px + var(--safe-right))
-    calc(16px + var(--safe-bottom))
-    calc(16px + var(--safe-left));
+  min-height: calc((var(--viewport-unit) * 100) - (var(--safe-top) + var(--safe-bottom)));
+  padding: 16px;
   background: var(--content-bg);
 }
 
@@ -195,14 +213,17 @@ body.is-menu-closing .site-menu-toggle {
 
 .site-menu {
   position: fixed;
-  inset: calc(var(--overscroll-bleed) * -1) 0;
+  top: calc(var(--safe-top) - var(--overscroll-bleed));
+  right: var(--safe-right);
+  bottom: calc(var(--safe-bottom) - var(--overscroll-bleed));
+  left: var(--safe-left);
   display: grid;
   place-items: center;
   padding:
-    calc(var(--safe-top) + clamp(32px, 6vw, 96px))
-    calc(var(--safe-right) + clamp(32px, 6vw, 96px))
-    calc(var(--safe-bottom) + clamp(32px, 6vw, 96px))
-    calc(var(--safe-left) + clamp(32px, 6vw, 96px));
+    calc(var(--overscroll-bleed) + clamp(32px, 6vw, 96px))
+    clamp(32px, 6vw, 96px)
+    calc(var(--overscroll-bleed) + clamp(32px, 6vw, 96px))
+    clamp(32px, 6vw, 96px);
   background: rgba(5, 5, 5, 0.82);
   backdrop-filter: blur(28px);
   z-index: 10;
@@ -463,6 +484,8 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   width: min(920px, 100%);
   margin: 0 auto;
   padding: clamp(48px, 22vh, 200px) clamp(24px, 8vw, 140px) clamp(200px, 52vh, 420px);
+  max-height: calc((var(--viewport-unit) * 100) - (var(--safe-top) + var(--safe-bottom)));
+  overflow: hidden;
   perspective: 1400px;
 }
 
@@ -515,7 +538,7 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   padding:
     clamp(80px, 18vh, 140px)
     clamp(24px, 8vw, 160px)
-    calc(var(--safe-bottom) + clamp(60px, 18vh, 160px))
+    clamp(60px, 18vh, 160px)
     clamp(24px, 8vw, 160px);
   color: var(--text-muted);
 }
@@ -598,10 +621,10 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
 
   .site-menu {
     padding:
-      calc(var(--safe-top) + clamp(20px, 8vw, 64px))
-      calc(var(--safe-right) + clamp(20px, 8vw, 64px))
-      calc(var(--safe-bottom) + clamp(20px, 8vw, 64px))
-      calc(var(--safe-left) + clamp(20px, 8vw, 64px));
+      calc(var(--overscroll-bleed) + clamp(20px, 8vw, 64px))
+      clamp(20px, 8vw, 64px)
+      calc(var(--overscroll-bleed) + clamp(20px, 8vw, 64px))
+      clamp(20px, 8vw, 64px);
   }
 
   .site-menu__container {
