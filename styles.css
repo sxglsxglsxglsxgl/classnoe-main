@@ -42,28 +42,21 @@
 html,
 body {
   margin: 0;
+  /* порядок высот: сначала старый fallback, затем современные динамические */
   min-height: 100vh;
+  min-height: 100svh;
   min-height: 100dvh;
   background: #000;
   color: #fff;
-  font-family: Arial, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-}
-
-html {
-  background: var(--background);
 }
 
 body {
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
-  background: var(--background);
   color: var(--text-strong);
   font-family: var(--font-serif);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
 }
 
 body.has-menu-open,
@@ -72,14 +65,16 @@ body.is-menu-closing {
 }
 
 .content {
-  min-height: 100vh;
-  min-height: 100dvh;
   box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
   padding:
     calc(16px + var(--safe-top))
     calc(16px + var(--safe-right))
     calc(16px + var(--safe-bottom))
     calc(16px + var(--safe-left));
+  background: transparent !important;
 }
 
 .visually-hidden {
