@@ -6,6 +6,8 @@
   --text-subtle: rgba(255, 255, 255, 0.6);
   --text-faint: rgba(255, 255, 255, 0.26);
   --viewport-unit: 1vh;
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --overscroll-bleed: clamp(120px, calc(var(--viewport-unit) * 16), 240px);
   --font-brand: 'Outfit', 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont,
     'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
@@ -424,13 +426,23 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
 }
 
 #sentences {
+  --sentences-padding-top: clamp(48px, calc(var(--viewport-unit) * 12), 200px);
+  --sentences-padding-bottom: clamp(160px, calc(var(--viewport-unit) * 28), 360px);
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   width: min(920px, 100%);
   margin: 0 auto;
-  padding: clamp(48px, 22vh, 200px) clamp(24px, 8vw, 140px) clamp(200px, 52vh, 420px);
+  min-height: max(
+    0px,
+    calc(
+      var(--viewport-unit) * 100 - var(--safe-area-top) - var(--safe-area-bottom) -
+        var(--sentences-padding-top) - var(--sentences-padding-bottom)
+    )
+  );
+  padding: calc(var(--safe-area-top) + var(--sentences-padding-top)) clamp(24px, 8vw, 140px)
+    calc(var(--safe-area-bottom) + var(--sentences-padding-bottom));
   perspective: 1400px;
 }
 
@@ -553,7 +565,9 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   }
 
   #sentences {
-    padding: clamp(48px, 16vh, 120px) clamp(20px, 9vw, 52px) clamp(200px, 56vh, 360px);
+    --sentences-padding-top: clamp(48px, calc(var(--viewport-unit) * 14), 120px);
+    --sentences-padding-bottom: clamp(140px, calc(var(--viewport-unit) * 32), 280px);
+    padding-inline: clamp(20px, 9vw, 52px);
   }
 
   .sentence {
