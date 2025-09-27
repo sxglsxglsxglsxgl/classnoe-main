@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
   <title>CLASSNOE MESTO — Inspired Tribute</title>
   <meta name="description" content="An homage to CLASSNOE MESTO's scrolling narrative experience." />
   <meta property="og:title" content="CLASSNOE MESTO — Inspired Tribute" />
@@ -18,99 +21,102 @@
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <div class="backdrop" aria-hidden="true"></div>
+  <div class="content">
+    <div class="backdrop" aria-hidden="true"></div>
 
-  <header class="site-header">
-    <div class="site-header__inner">
-      <div class="site-lockup">
+    <header class="site-header">
+      <div class="site-header__inner">
+        <div class="site-lockup">
+          <button
+            class="site-brand"
+            type="button"
+            data-scroll-to-sentences
+            aria-label="CLASSNOE MESTO — scroll to first message"
+          >
+            CLASSNOE MESTO
+          </button>
+        </div>
         <button
-          class="site-brand"
+          class="site-menu-toggle"
           type="button"
-          data-scroll-to-sentences
-          aria-label="CLASSNOE MESTO — scroll to first message"
+          data-menu-toggle
+          aria-expanded="false"
+          aria-controls="site-menu"
+          aria-label="Open menu"
         >
-          CLASSNOE MESTO
+          <span class="site-menu-toggle__icon" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
         </button>
       </div>
-      <button
-        class="site-menu-toggle"
-        type="button"
-        data-menu-toggle
-        aria-expanded="false"
-        aria-controls="site-menu"
-        aria-label="Open menu"
-      >
-        <span class="site-menu-toggle__icon" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-      </button>
-    </div>
-  </header>
+    </header>
 
-  <div
-    id="site-menu"
-    class="site-menu"
-    role="dialog"
-    aria-modal="true"
-    aria-label="Site navigation"
-    aria-hidden="true"
-    hidden
-  >
-    <div class="site-menu__backdrop" data-menu-close></div>
-    <div class="site-menu__container" role="document" tabindex="-1" data-menu-focus>
-      <nav class="site-menu__nav" aria-label="Primary">
-        <ul class="site-menu__list" role="list">
-          <li class="site-menu__item">
-            <a href="#content" class="site-menu__link" data-menu-link>Branding</a>
-          </li>
-          <li class="site-menu__item">
-            <a href="#content" class="site-menu__link" data-menu-link>Packaging</a>
-          </li>
-          <li class="site-menu__item">
-            <a href="#content" class="site-menu__link" data-menu-link>Social Media</a>
-          </li>
-          <li class="site-menu__item">
-            <a href="#content" class="site-menu__link" data-menu-link>Templates</a>
-          </li>
-          <li class="site-menu__item">
-            <a href="#content" class="site-menu__link" data-menu-link>Web Design</a>
-          </li>
-          <li class="site-menu__item">
-            <a href="#content" class="site-menu__link" data-menu-link>Monthly Design</a>
-          </li>
-        </ul>
-      </nav>
+    <div
+      id="site-menu"
+      class="site-menu"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Site navigation"
+      aria-hidden="true"
+      hidden
+    >
+      <div class="site-menu__backdrop" data-menu-close></div>
+      <div class="site-menu__container" role="document" tabindex="-1" data-menu-focus>
+        <nav class="site-menu__nav" aria-label="Primary">
+          <ul class="site-menu__list" role="list">
+            <li class="site-menu__item">
+              <a href="#content" class="site-menu__link" data-menu-link>Branding</a>
+            </li>
+            <li class="site-menu__item">
+              <a href="#content" class="site-menu__link" data-menu-link>Packaging</a>
+            </li>
+            <li class="site-menu__item">
+              <a href="#content" class="site-menu__link" data-menu-link>Social Media</a>
+            </li>
+            <li class="site-menu__item">
+              <a href="#content" class="site-menu__link" data-menu-link>Templates</a>
+            </li>
+            <li class="site-menu__item">
+              <a href="#content" class="site-menu__link" data-menu-link>Web Design</a>
+            </li>
+            <li class="site-menu__item">
+              <a href="#content" class="site-menu__link" data-menu-link>Monthly Design</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
+
+    <main id="content" aria-labelledby="content-title">
+      <h1 id="content-title" class="visually-hidden">CLASSNOE MESTO inspired narrative</h1>
+      <section id="sentences" role="list" aria-live="polite"></section>
+    </main>
+
+    <footer class="site-footer" aria-label="Footer">
+      <div class="site-footer__inner">
+        <div class="site-footer__column">
+          <h2>Inquiries</h2>
+          <a href="mailto:hello@classnoemesto.com">hello@classnoemesto.com</a>
+        </div>
+        <div class="site-footer__column">
+          <h2>Press</h2>
+          <a href="mailto:press@classnoemesto.com">press@classnoemesto.com</a>
+        </div>
+        <div class="site-footer__column">
+          <h2>Follow</h2>
+          <a
+            href="https://www.instagram.com/classnoemesto/"
+            target="_blank"
+            rel="noreferrer noopener"
+          >Instagram</a>
+        </div>
+      </div>
+    </footer>
   </div>
 
-  <main id="content" aria-labelledby="content-title">
-    <h1 id="content-title" class="visually-hidden">CLASSNOE MESTO inspired narrative</h1>
-    <section id="sentences" role="list" aria-live="polite"></section>
-  </main>
-
-  <footer class="site-footer" aria-label="Footer">
-    <div class="site-footer__inner">
-      <div class="site-footer__column">
-        <h2>Inquiries</h2>
-        <a href="mailto:hello@classnoemesto.com">hello@classnoemesto.com</a>
-      </div>
-      <div class="site-footer__column">
-        <h2>Press</h2>
-        <a href="mailto:press@classnoemesto.com">press@classnoemesto.com</a>
-      </div>
-      <div class="site-footer__column">
-        <h2>Follow</h2>
-        <a
-          href="https://www.instagram.com/classnoemesto/"
-          target="_blank"
-          rel="noreferrer noopener"
-        >Instagram</a>
-      </div>
-    </div>
-  </footer>
-
+  <script src="./safe-area.js"></script>
   <script>
     const SENTENCES = [
       "CLASSNOE MESTO is a creative collective of designers, architects, musicians, filmmakers, writers, and engineers.",
