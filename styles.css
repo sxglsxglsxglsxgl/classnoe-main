@@ -6,15 +6,11 @@
   --text-subtle: rgba(255, 255, 255, 0.6);
   --text-faint: rgba(255, 255, 255, 0.26);
   --viewport-unit: 1vh;
-  --safe-area-top: env(safe-area-inset-top, 0px);
-  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --overscroll-bleed: clamp(120px, calc(var(--viewport-unit) * 16), 240px);
   --font-brand: 'Outfit', 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont,
     'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
   --font-serif: 'SF Pro Text', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
   --font-sans: 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
-  --font-lead: 'SF Pro Display', 'SF Pro Text', 'SF Pro', -apple-system, BlinkMacSystemFont,
-    'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
 }
 
 @supports (height: 100dvh) {
@@ -273,12 +269,72 @@ main {
 .site-header {
   position: relative;
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  min-height: 0;
-  padding: calc(var(--safe-area-top) + clamp(20px, 6vh, 48px)) clamp(24px, 6vw, 60px) 0;
+  min-height: calc(var(--viewport-unit) * 100);
+  padding: clamp(32px, 8vh, 96px) clamp(24px, 6vw, 60px);
   z-index: 32;
+}
+
+.site-header__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 3vw, 36px);
+  width: min(960px, 100%);
+  pointer-events: auto;
+  text-align: center;
+}
+
+.site-lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.6vw, 16px);
+  transition: opacity 360ms ease-in-out, transform 360ms ease-in-out;
+}
+
+body.has-menu-open .site-lockup,
+body.is-menu-closing .site-lockup {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+.site-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  appearance: none;
+  cursor: pointer;
+  font-family: var(--font-brand);
+  font-size: clamp(21.6px, 5.4vw, 57.6px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.995);
+  text-shadow: 0 0 32px rgba(255, 255, 255, 0.28);
+  text-align: center;
+  white-space: nowrap;
+  transition: color 200ms ease;
+}
+
+.site-brand:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+.site-brand:focus-visible {
+  outline: none;
+  color: rgba(255, 255, 255, 1);
+  text-shadow: 0 0 26px rgba(255, 255, 255, 0.35);
 }
 
 .site-menu-toggle {
@@ -368,22 +424,13 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
 }
 
 #sentences {
-  --sentences-padding-top: clamp(48px, calc(var(--viewport-unit) * 12), 200px);
-  --sentences-padding-bottom: clamp(160px, calc(var(--viewport-unit) * 28), 360px);
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   width: min(920px, 100%);
-  margin: calc(var(--safe-area-top) * -1) auto calc(var(--safe-area-bottom) * -1);
-  min-height: max(
-    0px,
-    calc(
-      var(--viewport-unit) * 100 - var(--sentences-padding-top) - var(--sentences-padding-bottom)
-    )
-  );
-  padding: calc(var(--safe-area-top) + var(--sentences-padding-top)) clamp(24px, 8vw, 140px)
-    calc(var(--safe-area-bottom) + var(--sentences-padding-bottom));
+  margin: 0 auto;
+  padding: clamp(48px, 22vh, 200px) clamp(24px, 8vw, 140px) clamp(200px, 52vh, 420px);
   perspective: 1400px;
 }
 
@@ -398,49 +445,34 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   line-height: 1.18;
   letter-spacing: -0.015em;
   font-weight: 500;
-  color: var(--text-strong);
-  text-wrap: balance;
-}
-
-body.has-sentence-enhancements .sentence {
   color: var(--text-faint);
   opacity: 0;
   filter: blur(28px);
   transform: translate3d(0, 160px, -280px) scale(0.88);
   transition:
-    opacity 1520ms ease,
-    filter 1520ms ease,
-    transform 1760ms cubic-bezier(0.22, 0.61, 0.36, 1),
-    color 1240ms ease;
+    opacity 760ms ease,
+    filter 760ms ease,
+    transform 880ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    color 620ms ease;
   will-change: opacity, transform, filter, color;
+  text-wrap: balance;
 }
 
-.sentence--lead {
-  font-family: var(--font-lead);
-  font-size: clamp(12px, 4vw, 48px);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 700;
-  text-shadow: 0 0 36px rgba(255, 255, 255, 0.32);
-  color: rgba(255, 255, 255, 0.88);
-  white-space: nowrap;
-}
-
-body.has-sentence-enhancements .sentence.is-visible {
+.sentence.is-visible {
   opacity: 0.5;
   color: rgba(255, 255, 255, 0.62);
   filter: blur(16px);
   transform: translate3d(0, 80px, -160px) scale(0.92);
 }
 
-body.has-sentence-enhancements .sentence.is-past {
+.sentence.is-past {
   opacity: 0.36;
   color: rgba(255, 255, 255, 0.38);
   filter: blur(18px);
   transform: translate3d(0, -60px, -220px) scale(0.9);
 }
 
-body.has-sentence-enhancements .sentence.is-active {
+.sentence.is-active {
   opacity: 1;
   color: var(--text-strong);
   filter: blur(0);
@@ -496,7 +528,16 @@ body.has-sentence-enhancements .sentence.is-active {
 
 @media (max-width: 720px) {
   .site-header {
-    padding: calc(var(--safe-area-top) + clamp(18px, 12vh, 52px)) clamp(20px, 10vw, 40px) 0;
+    padding: clamp(36px, 14vh, 80px) clamp(20px, 10vw, 40px);
+  }
+
+  .site-header__inner {
+    gap: clamp(24px, 8vw, 40px);
+  }
+
+  .site-brand {
+    font-size: clamp(22px, 8.4vw, 36px);
+    letter-spacing: 0.045em;
   }
 
   .site-menu-toggle {
@@ -512,9 +553,7 @@ body.has-sentence-enhancements .sentence.is-active {
   }
 
   #sentences {
-    --sentences-padding-top: clamp(48px, calc(var(--viewport-unit) * 14), 120px);
-    --sentences-padding-bottom: clamp(140px, calc(var(--viewport-unit) * 32), 280px);
-    padding-inline: clamp(20px, 9vw, 52px);
+    padding: clamp(48px, 16vh, 120px) clamp(20px, 9vw, 52px) clamp(200px, 56vh, 360px);
   }
 
   .sentence {

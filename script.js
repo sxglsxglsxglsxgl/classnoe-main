@@ -7,6 +7,10 @@
     supportsCSS &&
     (window.CSS.supports('height', '100dvh') || window.CSS.supports('height', '100lvh'));
 
+  if (supportsStableUnit) {
+    return;
+  }
+
   const visual = window.visualViewport;
   const KEYBOARD_THRESHOLD = 120;
   const PRECISION_THRESHOLD = 0.5;
@@ -64,23 +68,6 @@
   function applyViewportUnit() {
     const { height, innerHeight, layoutViewport, visualHeight } = measureViewport();
 
-    const safeAreaTop =
-      visual && typeof visual.offsetTop === 'number'
-        ? Math.max(visual.offsetTop, 0)
-        : 0;
-    const innerHeightValue =
-      typeof window.innerHeight === 'number' ? window.innerHeight : null;
-    const safeAreaBottom =
-      visual &&
-      typeof visual.height === 'number' &&
-      typeof visual.offsetTop === 'number' &&
-      innerHeightValue != null
-        ? Math.max(innerHeightValue - visual.height - visual.offsetTop, 0)
-        : 0;
-
-    root.style.setProperty('--safe-area-top', `${safeAreaTop}px`);
-    root.style.setProperty('--safe-area-bottom', `${safeAreaBottom}px`);
-
     if (!height) return;
 
     const keyboardActive = isKeyboardActive(innerHeight, visualHeight);
@@ -109,9 +96,8 @@
     if (!targetHeight) return;
 
     if (
-      !supportsStableUnit &&
-      (lastNotifiedHeight == null ||
-        Math.abs(targetHeight - lastNotifiedHeight) > PRECISION_THRESHOLD)
+      lastNotifiedHeight == null ||
+      Math.abs(targetHeight - lastNotifiedHeight) > PRECISION_THRESHOLD
     ) {
       root.style.setProperty('--viewport-unit', toViewportUnit(targetHeight));
       lastNotifiedHeight = targetHeight;
@@ -184,73 +170,21 @@
 
 (function () {
   const { SENTENCES } = window.SITE_CONFIG || {};
+  if (!Array.isArray(SENTENCES) || SENTENCES.length === 0) return;
+
   const container = document.getElementById('sentences');
   if (!container) return;
 
-  const body = document.body;
-
-  let nodes = Array.from(container.querySelectorAll('.sentence'));
-
-  const hasSentencesConfig = Array.isArray(SENTENCES) && SENTENCES.length > 0;
-
-  if (!nodes.length && !hasSentencesConfig) {
-    return;
-  }
-
-  if (hasSentencesConfig) {
-    if (!nodes.length) {
-      nodes = SENTENCES.map((text) => {
-        const sentence = document.createElement('p');
-        sentence.className = 'sentence';
-        sentence.textContent = text;
-        container.appendChild(sentence);
-        return sentence;
-      });
-    } else {
-      nodes.forEach((node, index) => {
-        if (index < SENTENCES.length) {
-          node.textContent = SENTENCES[index];
-        }
-      });
-
-      if (nodes.length < SENTENCES.length) {
-        const additional = SENTENCES.slice(nodes.length).map((text) => {
-          const sentence = document.createElement('p');
-          sentence.className = 'sentence';
-          sentence.textContent = text;
-          container.appendChild(sentence);
-          return sentence;
-        });
-        nodes = nodes.concat(additional);
-      } else if (nodes.length > SENTENCES.length) {
-        nodes.slice(SENTENCES.length).forEach((node) => {
-          node.remove();
-        });
-        nodes = nodes.slice(0, SENTENCES.length);
-      }
-    }
-  }
-
-  if (!nodes.length) {
-    return;
-  }
-
-  if (body) {
-    body.classList.add('has-sentence-enhancements');
-  }
-
-  const total = nodes.length;
-
-  nodes.forEach((node, index) => {
-    node.setAttribute('role', 'listitem');
-    node.setAttribute('aria-setsize', String(total));
-    node.setAttribute('aria-posinset', String(index + 1));
-
-    if (index === 0) {
-      node.classList.add('sentence--lead');
-    } else {
-      node.classList.remove('sentence--lead');
-    }
+  const total = SENTENCES.length;
+  const nodes = SENTENCES.map((text, index) => {
+    const sentence = document.createElement('p');
+    sentence.className = 'sentence';
+    sentence.textContent = text;
+    sentence.setAttribute('role', 'listitem');
+    sentence.setAttribute('aria-setsize', String(total));
+    sentence.setAttribute('aria-posinset', String(index + 1));
+    container.appendChild(sentence);
+    return sentence;
   });
 
   const revealed = new Set();
@@ -542,4 +476,88 @@
   });
 })();
 
+(function () {
+  const trigger = document.querySelector('[data-scroll-to-sentences]');
+  const container = document.getElementById('sentences');
+
+  if (!trigger || !container) return;
+
+  function getAbsoluteOffsetTop(element) {
+    let current = element;
+    let offset = 0;
+
+    while (current) {
+      offset += current.offsetTop || 0;
+      current = current.offsetParent;
+    }
+
+    return offset;
+  }
+
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  function animateScrollTo(top, duration) {
+    const currentX = window.scrollX || window.pageXOffset || 0;
+    const start = window.scrollY || window.pageYOffset || 0;
+    const distance = top - start;
+    if (distance === 0 || duration <= 0) {
+      window.scrollTo({ left: currentX, top });
+      return;
+    }
+
+    const startTime = performance.now();
+
+    const easeInOutCubic = (t) =>
+      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    function step(now) {
+      const elapsed = now - startTime;
+      const progress = clamp(elapsed / duration, 0, 1);
+      const eased = easeInOutCubic(progress);
+      window.scrollTo({ left: currentX, top: Math.round(start + distance * eased) });
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  function scrollToSentences() {
+    const target = container.querySelector('.sentence') || container;
+    const prefersReducedMotion =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    const targetHeight = target.offsetHeight || target.getBoundingClientRect().height || 0;
+    const documentHeight = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight,
+      document.body.clientHeight,
+      document.documentElement.clientHeight
+    );
+
+    const maxScroll = Math.max(0, documentHeight - viewportHeight);
+
+    let destination = getAbsoluteOffsetTop(target);
+
+    if (targetHeight < viewportHeight) {
+      destination -= (viewportHeight - targetHeight) / 2;
+    }
+
+    destination = clamp(destination, 0, maxScroll);
+
+    if (prefersReducedMotion) {
+      window.scrollTo({ top: destination, behavior: 'auto' });
+      return;
+    }
+
+    animateScrollTo(destination, 700);
+  }
+
+  trigger.addEventListener('click', scrollToSentences);
 })();
