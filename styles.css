@@ -188,7 +188,11 @@ body.is-menu-closing .site-menu-toggle {
   inset: calc(var(--overscroll-bleed) * -1) 0;
   display: grid;
   place-items: center;
-  padding: clamp(32px, 6vw, 96px);
+  padding:
+    calc(var(--safe-top) + clamp(32px, 6vw, 96px))
+    calc(var(--safe-right) + clamp(32px, 6vw, 96px))
+    calc(var(--safe-bottom) + clamp(32px, 6vw, 96px))
+    calc(var(--safe-left) + clamp(32px, 6vw, 96px));
   background: rgba(5, 5, 5, 0.82);
   backdrop-filter: blur(28px);
   z-index: 10;
@@ -357,8 +361,8 @@ body.is-menu-closing .site-lockup {
 
 .site-menu-toggle {
   position: fixed;
-  top: clamp(24px, 4vw, 48px);
-  right: clamp(24px, 4vw, 48px);
+  top: calc(var(--safe-top) + clamp(24px, 4vw, 48px));
+  right: calc(var(--safe-right) + clamp(24px, 4vw, 48px));
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -498,7 +502,11 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
 }
 
 .site-footer {
-  padding: clamp(80px, 18vh, 140px) clamp(24px, 8vw, 160px) clamp(60px, 18vh, 160px);
+  padding:
+    clamp(80px, 18vh, 140px)
+    clamp(24px, 8vw, 160px)
+    calc(var(--safe-bottom) + clamp(60px, 18vh, 160px))
+    clamp(24px, 8vw, 160px);
   color: var(--text-muted);
 }
 
