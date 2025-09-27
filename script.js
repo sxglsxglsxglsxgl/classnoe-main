@@ -7,10 +7,6 @@
     supportsCSS &&
     (window.CSS.supports('height', '100dvh') || window.CSS.supports('height', '100lvh'));
 
-  if (supportsStableUnit) {
-    return;
-  }
-
   const visual = window.visualViewport;
   const KEYBOARD_THRESHOLD = 120;
   const PRECISION_THRESHOLD = 0.5;
@@ -68,6 +64,23 @@
   function applyViewportUnit() {
     const { height, innerHeight, layoutViewport, visualHeight } = measureViewport();
 
+    const safeAreaTop =
+      visual && typeof visual.offsetTop === 'number'
+        ? Math.max(visual.offsetTop, 0)
+        : 0;
+    const innerHeightValue =
+      typeof window.innerHeight === 'number' ? window.innerHeight : null;
+    const safeAreaBottom =
+      visual &&
+      typeof visual.height === 'number' &&
+      typeof visual.offsetTop === 'number' &&
+      innerHeightValue != null
+        ? Math.max(innerHeightValue - visual.height - visual.offsetTop, 0)
+        : 0;
+
+    root.style.setProperty('--safe-area-top', `${safeAreaTop}px`);
+    root.style.setProperty('--safe-area-bottom', `${safeAreaBottom}px`);
+
     if (!height) return;
 
     const keyboardActive = isKeyboardActive(innerHeight, visualHeight);
@@ -96,8 +109,9 @@
     if (!targetHeight) return;
 
     if (
-      lastNotifiedHeight == null ||
-      Math.abs(targetHeight - lastNotifiedHeight) > PRECISION_THRESHOLD
+      !supportsStableUnit &&
+      (lastNotifiedHeight == null ||
+        Math.abs(targetHeight - lastNotifiedHeight) > PRECISION_THRESHOLD)
     ) {
       root.style.setProperty('--viewport-unit', toViewportUnit(targetHeight));
       lastNotifiedHeight = targetHeight;
