@@ -130,5 +130,29 @@
     console.log(getComputedStyle(document.documentElement).getPropertyValue('--safe-bottom'));
   </script>
   <script defer src="./script.js"></script>
+  <pre
+    id="safe-debug"
+    style="position:fixed;left:8px;bottom:8px;padding:6px 8px;background:rgba(0,0,0,.6);color:#0f0;font:12px/1.4 ui-monospace,Menlo,Consolas,monospace;z-index:99999;border-radius:6px;"
+  ></pre>
+  <script>
+    (function () {
+      function dump() {
+        const cs = getComputedStyle(document.documentElement);
+        const t = cs.getPropertyValue('--safe-top').trim();
+        const r = cs.getPropertyValue('--safe-right').trim();
+        const b = cs.getPropertyValue('--safe-bottom').trim();
+        const l = cs.getPropertyValue('--safe-left').trim();
+        document.getElementById('safe-debug').textContent =
+          `safe-top: ${t}\nsafe-right: ${r}\nsafe-bottom: ${b}\nsafe-left: ${l}`;
+      }
+      dump();
+      window.addEventListener('resize', dump);
+      window.addEventListener('orientationchange', dump);
+      if (window.visualViewport) {
+        visualViewport.addEventListener('resize', dump);
+        visualViewport.addEventListener('scroll', dump);
+      }
+    })();
+  </script>
 </body>
 </html>
