@@ -11,14 +11,10 @@
     'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
   --font-serif: 'SF Pro Text', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
   --font-sans: 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', 'Inter', sans-serif;
-  --inset-top: env(safe-area-inset-top, 0px);
-  --inset-right: env(safe-area-inset-right, 0px);
-  --inset-bottom: env(safe-area-inset-bottom, 0px);
-  --inset-left: env(safe-area-inset-left, 0px);
-  --safe-top: var(--inset-top);
-  --safe-right: var(--inset-right);
-  --safe-bottom: var(--inset-bottom);
-  --safe-left: var(--inset-left);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
   --content-bg: transparent;
 }
 
@@ -44,38 +40,38 @@
   display: none !important;
 }
 
-/* Корень: фон заливает unsafe; скролл у документа, чтобы Safari прятал панели */
 html,
 body {
   margin: 0;
+  /* порядок высот: сначала старый fallback, затем современные динамические */
   min-height: 100vh;
   min-height: 100svh;
   min-height: 100dvh;
   background: #000;
   color: #fff;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
+  /* iOS: раскрытые панели браузера остаются системным хромом — unsafe-зоны видны лишь при схлопнутых панелях или в PWA */
 }
 
-/* Пэддинги для safe-area переносим на body: контент внутри безопасной зоны */
 body {
   position: relative;
-  padding:
-    calc(12px + var(--inset-top))
-    calc(12px + var(--inset-right))
-    calc(12px + var(--inset-bottom))
-    calc(12px + var(--inset-left));
   color: var(--text-strong);
   font-family: var(--font-serif);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  clip-path: none !important;
 }
 
-/* УБРАТЬ: любые глобальные обрезки */
 .safe-frame {
-  display: none !important;
+  position: fixed;
+  top: var(--safe-top);
+  right: var(--safe-right);
+  bottom: var(--safe-bottom);
+  left: var(--safe-left);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  contain: layout paint size;
+  z-index: 0;
 }
 
 body.has-menu-open,
@@ -83,36 +79,22 @@ body.is-menu-closing {
   overflow: hidden;
 }
 
-/* Контент не фиксируем на весь экран, не перекрываем фон */
+.safe-frame .content {
+  position: relative;
+  flex: 1 1 auto;
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .content {
   box-sizing: border-box;
-  position: relative;
-  z-index: 1;
-  background: transparent !important;
-  filter: none !important;
-  opacity: 1 !important;
-  overflow: visible;
   min-height: 100vh;
   min-height: 100svh;
   min-height: 100dvh;
-}
-
-/* Мягкая маска по краям safe-area (гасит текст у самых краёв вместо hard-clip) */
-.safe-mask {
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    #000 calc(var(--inset-top) + 1px),
-    #000 calc(100% - (var(--inset-bottom) + 1px)),
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    #000 calc(var(--inset-top) + 1px),
-    #000 calc(100% - (var(--inset-bottom) + 1px)),
-    transparent 100%
-  );
+  min-height: calc((var(--viewport-unit) * 100) - (var(--safe-top) + var(--safe-bottom)));
+  padding: 16px;
+  background: var(--content-bg);
 }
 
 .visually-hidden {
@@ -127,7 +109,6 @@ body.is-menu-closing {
   border: 0;
 }
 
-/* Фоны/оверлеи не должны перекрывать текст */
 body::before {
   content: '';
   position: fixed;
@@ -145,7 +126,7 @@ body::after {
   position: fixed;
   inset: calc(var(--overscroll-bleed) * -1) 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 2;
   background-image:
     linear-gradient(to bottom, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0) 60%),
     linear-gradient(to top, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0) 60%),
@@ -178,14 +159,6 @@ html.safe-test body::after {
   display: none;
 }
 
-/* Оверлеи — под контент и без кликов */
-body::before,
-body::after,
-.backdrop {
-  pointer-events: none !important;
-  z-index: 0 !important;
-}
-
 .backdrop {
   position: fixed;
   inset: calc(var(--overscroll-bleed) * -1) 0;
@@ -205,9 +178,27 @@ body::after,
 }
 
 main,
+header,
 footer {
   position: relative;
   z-index: 1;
+}
+
+main,
+header,
+footer,
+.backdrop {
+  transition: filter 500ms ease-in-out, opacity 500ms ease-in-out;
+}
+
+body.has-menu-open main,
+body.has-menu-open footer,
+body.has-menu-open .backdrop,
+body.is-menu-closing main,
+body.is-menu-closing footer,
+body.is-menu-closing .backdrop {
+  filter: blur(28px);
+  opacity: 0.2;
 }
 
 body.has-menu-open .site-header,
@@ -328,17 +319,15 @@ main {
   min-height: 100vh;
 }
 
-/* Элементы у краёв — привязываем к insets */
 .site-header {
-  position: sticky;
-  top: 0;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   min-height: calc(var(--viewport-unit) * 100);
   padding: clamp(32px, 8vh, 96px) clamp(24px, 6vw, 60px);
-  z-index: 10;
+  z-index: 32;
 }
 
 .site-header__inner {
@@ -403,8 +392,8 @@ body.is-menu-closing .site-lockup {
 
 .site-menu-toggle {
   position: fixed;
-  top: calc(var(--inset-top) + 16px);
-  right: calc(var(--inset-right) + 16px);
+  top: calc(var(--safe-top) + clamp(24px, 4vw, 48px));
+  right: calc(var(--safe-right) + clamp(24px, 4vw, 48px));
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -418,15 +407,6 @@ body.is-menu-closing .site-lockup {
   cursor: pointer;
   z-index: 40;
   transition: color 340ms ease;
-}
-
-.site-footer-fixed,
-.cta-fixed {
-  position: fixed;
-  left: calc(var(--inset-left) + 16px);
-  right: calc(var(--inset-right) + 16px);
-  bottom: calc(var(--inset-bottom) + 16px);
-  z-index: 20;
 }
 
 .site-menu-toggle:hover,
@@ -496,7 +476,6 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   transform: translateY(-50%) rotate(-45deg);
 }
 
-/* Блок с предложениями/текстом — ничего не обрезаем */
 #sentences {
   position: relative;
   display: flex;
@@ -505,15 +484,9 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   width: min(920px, 100%);
   margin: 0 auto;
   padding: clamp(48px, 22vh, 200px) clamp(24px, 8vw, 140px) clamp(200px, 52vh, 420px);
-  max-height: none;
-  overflow: visible;
+  max-height: calc((var(--viewport-unit) * 100) - (var(--safe-top) + var(--safe-bottom)));
+  overflow: hidden;
   perspective: 1400px;
-}
-
-.sentences-layer {
-  position: relative;
-  overflow: visible;
-  max-height: none;
 }
 
 .sentence {

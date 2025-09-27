@@ -175,8 +175,6 @@
   const container = document.getElementById('sentences');
   if (!container) return;
 
-  const scroller = container.closest('.content');
-
   const total = SENTENCES.length;
   const nodes = SENTENCES.map((text, index) => {
     const sentence = document.createElement('p');
@@ -215,47 +213,24 @@
     });
   }
 
-  function getViewportMetrics() {
-    if (!scroller) {
-      const height = window.innerHeight || document.documentElement.clientHeight || 0;
-      return {
-        top: 0,
-        height,
-        bottom: height,
-        center: height / 2
-      };
-    }
-
-    const rect = scroller.getBoundingClientRect();
-    const height = scroller.clientHeight || rect.height || 0;
-    const top = rect.top;
-    const bottom = top + height;
-
-    return {
-      top,
-      height,
-      bottom,
-      center: top + height / 2
-    };
-  }
-
   function updateActiveSentence() {
-    const viewport = getViewportMetrics();
-    const revealOffset = viewport.height * 0.3;
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    const revealOffset = viewportHeight * 0.3;
+    const viewportCenter = viewportHeight / 2;
     let nextIndex = -1;
     let smallestDistance = Infinity;
 
     nodes.forEach((node, index) => {
       const rect = node.getBoundingClientRect();
       const isIntersecting =
-        rect.bottom > viewport.top - revealOffset && rect.top < viewport.bottom + revealOffset;
+        rect.bottom > -revealOffset && rect.top < viewportHeight + revealOffset;
 
       if (!isIntersecting) {
         return;
       }
 
       const nodeCenter = rect.top + rect.height / 2;
-      const distance = Math.abs(nodeCenter - viewport.center);
+      const distance = Math.abs(nodeCenter - viewportCenter);
 
       if (distance < smallestDistance) {
         smallestDistance = distance;
@@ -281,11 +256,7 @@
 
   requestUpdate();
 
-  if (scroller) {
-    scroller.addEventListener('scroll', requestUpdate, { passive: true });
-  } else {
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-  }
+  window.addEventListener('scroll', requestUpdate, { passive: true });
   window.addEventListener('resize', requestUpdate);
 })();
 
