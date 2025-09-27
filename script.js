@@ -184,26 +184,67 @@
 
 (function () {
   const { SENTENCES } = window.SITE_CONFIG || {};
-  if (!Array.isArray(SENTENCES) || SENTENCES.length === 0) return;
-
   const container = document.getElementById('sentences');
   if (!container) return;
 
-  const total = SENTENCES.length;
-  const nodes = SENTENCES.map((text, index) => {
-    const sentence = document.createElement('p');
-    sentence.className = 'sentence';
-    sentence.textContent = text;
-    sentence.setAttribute('role', 'listitem');
-    sentence.setAttribute('aria-setsize', String(total));
-    sentence.setAttribute('aria-posinset', String(index + 1));
+  let nodes = Array.from(container.querySelectorAll('.sentence'));
+
+  const hasSentencesConfig = Array.isArray(SENTENCES) && SENTENCES.length > 0;
+
+  if (!nodes.length && !hasSentencesConfig) {
+    return;
+  }
+
+  if (hasSentencesConfig) {
+    if (!nodes.length) {
+      nodes = SENTENCES.map((text) => {
+        const sentence = document.createElement('p');
+        sentence.className = 'sentence';
+        sentence.textContent = text;
+        container.appendChild(sentence);
+        return sentence;
+      });
+    } else {
+      nodes.forEach((node, index) => {
+        if (index < SENTENCES.length) {
+          node.textContent = SENTENCES[index];
+        }
+      });
+
+      if (nodes.length < SENTENCES.length) {
+        const additional = SENTENCES.slice(nodes.length).map((text) => {
+          const sentence = document.createElement('p');
+          sentence.className = 'sentence';
+          sentence.textContent = text;
+          container.appendChild(sentence);
+          return sentence;
+        });
+        nodes = nodes.concat(additional);
+      } else if (nodes.length > SENTENCES.length) {
+        nodes.slice(SENTENCES.length).forEach((node) => {
+          node.remove();
+        });
+        nodes = nodes.slice(0, SENTENCES.length);
+      }
+    }
+  }
+
+  if (!nodes.length) {
+    return;
+  }
+
+  const total = nodes.length;
+
+  nodes.forEach((node, index) => {
+    node.setAttribute('role', 'listitem');
+    node.setAttribute('aria-setsize', String(total));
+    node.setAttribute('aria-posinset', String(index + 1));
 
     if (index === 0) {
-      sentence.classList.add('sentence--lead');
+      node.classList.add('sentence--lead');
+    } else {
+      node.classList.remove('sentence--lead');
     }
-
-    container.appendChild(sentence);
-    return sentence;
   });
 
   const revealed = new Set();
