@@ -11,7 +11,9 @@
   <meta property="og:title" content="CLASSNOE MESTO — Inspired Tribute" />
   <meta property="og:description" content="An homage to CLASSNOE MESTO's scrolling narrative experience." />
   <meta property="og:type" content="website" />
-  <meta name="theme-color" content="#0b0b0b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#000000" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -118,6 +120,14 @@
 
   <script src="./safe-area.js"></script>
   <script>
+    (function () {
+      const qs = new URLSearchParams(location.search);
+      if (qs.get('safetest') === '1') {
+        document.documentElement.classList.add('safe-test');
+      }
+    })();
+  </script>
+  <script>
     const SENTENCES = [
       "CLASSNOE MESTO is a creative collective of designers, architects, musicians, filmmakers, writers, and engineers.",
       "We are fascinated by the traditions of craft and defined by the pursuit of excellence.",
@@ -136,6 +146,12 @@
   ></pre>
   <script>
     (function () {
+      const qs = new URLSearchParams(location.search);
+      if (!qs.has('debug') || qs.get('debug') !== 'safe') {
+        const dbg = document.getElementById('safe-debug');
+        if (dbg) dbg.remove();
+        return;
+      }
       function dump() {
         const cs = getComputedStyle(document.documentElement);
         const t = cs.getPropertyValue('--safe-top').trim();
