@@ -567,8 +567,8 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   }
 
   .site-menu-toggle {
-    top: clamp(20px, 9vw, 36px);
-    right: clamp(20px, 9vw, 36px);
+    top: calc(var(--safe-top) + clamp(20px, 9vw, 36px));
+    right: calc(var(--safe-right) + clamp(20px, 9vw, 36px));
     width: clamp(40px, 14vw, 52px);
     height: clamp(40px, 14vw, 52px);
   }
@@ -587,7 +587,11 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   }
 
   .site-menu {
-    padding: clamp(20px, 8vw, 64px);
+    padding:
+      calc(var(--safe-top) + clamp(20px, 8vw, 64px))
+      calc(var(--safe-right) + clamp(20px, 8vw, 64px))
+      calc(var(--safe-bottom) + clamp(20px, 8vw, 64px))
+      calc(var(--safe-left) + clamp(20px, 8vw, 64px));
   }
 
   .site-menu__container {

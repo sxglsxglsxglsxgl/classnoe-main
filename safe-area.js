@@ -1,13 +1,29 @@
 (function () {
   const root = document.documentElement;
-  const computed = getComputedStyle(root);
-  const baseInsets = {
-    top: parseFloat(computed.getPropertyValue('--safe-top')) || 0,
-    right: parseFloat(computed.getPropertyValue('--safe-right')) || 0,
-    bottom: parseFloat(computed.getPropertyValue('--safe-bottom')) || 0,
-    left: parseFloat(computed.getPropertyValue('--safe-left')) || 0,
-  };
   const vv = window.visualViewport;
+
+  function measureEnvInset(side) {
+    const probe = document.createElement('div');
+    probe.style.position = 'absolute';
+    probe.style.visibility = 'hidden';
+    probe.style.pointerEvents = 'none';
+    probe.style.setProperty(`padding-${side}`, `env(safe-area-inset-${side}, 0px)`);
+    root.appendChild(probe);
+    const value = parseFloat(getComputedStyle(probe).getPropertyValue(`padding-${side}`)) || 0;
+    root.removeChild(probe);
+    return value;
+  }
+
+  function readBaseInsets() {
+    return {
+      top: measureEnvInset('top'),
+      right: measureEnvInset('right'),
+      bottom: measureEnvInset('bottom'),
+      left: measureEnvInset('left'),
+    };
+  }
+
+  let baseInsets = readBaseInsets();
 
   function update() {
     const top = vv ? Math.max(baseInsets.top, Math.max(0, vv.offsetTop)) : baseInsets.top;
@@ -33,8 +49,15 @@
 
   update();
   if (vv) {
-    vv.addEventListener('resize', update);
+    const handleResize = () => {
+      baseInsets = readBaseInsets();
+      update();
+    };
+    vv.addEventListener('resize', handleResize);
     vv.addEventListener('scroll', update);
   }
-  window.addEventListener('orientationchange', update);
+  window.addEventListener('orientationchange', () => {
+    baseInsets = readBaseInsets();
+    update();
+  });
 })();
