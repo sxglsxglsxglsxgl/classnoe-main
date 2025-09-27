@@ -187,6 +187,8 @@
   const container = document.getElementById('sentences');
   if (!container) return;
 
+  const body = document.body;
+
   let nodes = Array.from(container.querySelectorAll('.sentence'));
 
   const hasSentencesConfig = Array.isArray(SENTENCES) && SENTENCES.length > 0;
@@ -231,6 +233,10 @@
 
   if (!nodes.length) {
     return;
+  }
+
+  if (body) {
+    body.classList.add('has-sentence-enhancements');
   }
 
   const total = nodes.length;
