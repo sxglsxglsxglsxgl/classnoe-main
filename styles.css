@@ -40,6 +40,7 @@
   display: none !important;
 }
 
+/* Корень: фон заливает unsafe-зоны, скролл у документа */
 html,
 body {
   margin: 0;
@@ -49,29 +50,30 @@ body {
   min-height: 100dvh;
   background: #000;
   color: #fff;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
   /* iOS: раскрытые панели браузера остаются системным хромом — unsafe-зоны видны лишь при схлопнутых панелях или в PWA */
 }
 
+/* Пэддинги для safe-area переносим на body: контент внутри безопасной зоны */
 body {
   position: relative;
+  padding:
+    var(--safe-top)
+    var(--safe-right)
+    var(--safe-bottom)
+    var(--safe-left);
   color: var(--text-strong);
   font-family: var(--font-serif);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  clip-path: none !important;
 }
 
+/* УБРАТЬ: любые глобальные обрезки */
 .safe-frame {
-  position: fixed;
-  top: var(--safe-top);
-  right: var(--safe-right);
-  bottom: var(--safe-bottom);
-  left: var(--safe-left);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  contain: layout paint size;
-  z-index: 0;
+  display: none !important;
 }
 
 body.has-menu-open,
@@ -79,22 +81,17 @@ body.is-menu-closing {
   overflow: hidden;
 }
 
-.safe-frame .content {
-  position: relative;
-  flex: 1 1 auto;
-  height: 100%;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
+/* Контент не фиксируем на весь экран, не перекрываем фон */
 .content {
   box-sizing: border-box;
   min-height: 100vh;
   min-height: 100svh;
   min-height: 100dvh;
-  min-height: calc((var(--viewport-unit) * 100) - (var(--safe-top) + var(--safe-bottom)));
   padding: 16px;
-  background: var(--content-bg);
+  background: transparent;
+  overflow: visible;
+  position: relative;
+  z-index: 1;
 }
 
 .visually-hidden {
@@ -109,6 +106,7 @@ body.is-menu-closing {
   border: 0;
 }
 
+/* Фоны/оверлеи не должны перекрывать текст */
 body::before {
   content: '';
   position: fixed;
@@ -126,7 +124,7 @@ body::after {
   position: fixed;
   inset: calc(var(--overscroll-bleed) * -1) 0;
   pointer-events: none;
-  z-index: 2;
+  z-index: 0;
   background-image:
     linear-gradient(to bottom, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0) 60%),
     linear-gradient(to top, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0) 60%),
@@ -178,7 +176,6 @@ html.safe-test body::after {
 }
 
 main,
-header,
 footer {
   position: relative;
   z-index: 1;
@@ -319,15 +316,17 @@ main {
   min-height: 100vh;
 }
 
+/* Элементы у краёв — привязываем к insets */
 .site-header {
-  position: relative;
+  position: sticky;
+  top: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   min-height: calc(var(--viewport-unit) * 100);
   padding: clamp(32px, 8vh, 96px) clamp(24px, 6vw, 60px);
-  z-index: 32;
+  z-index: 10;
 }
 
 .site-header__inner {
@@ -409,6 +408,15 @@ body.is-menu-closing .site-lockup {
   transition: color 340ms ease;
 }
 
+.site-footer-fixed,
+.cta-fixed {
+  position: fixed;
+  left: calc(var(--safe-left) + 16px);
+  right: calc(var(--safe-right) + 16px);
+  bottom: calc(var(--safe-bottom) + 16px);
+  z-index: 20;
+}
+
 .site-menu-toggle:hover,
 .site-menu-toggle:focus-visible {
   color: rgba(255, 255, 255, 0.995);
@@ -476,6 +484,7 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   transform: translateY(-50%) rotate(-45deg);
 }
 
+/* Блок с предложениями/текстом — ничего не обрезаем */
 #sentences {
   position: relative;
   display: flex;
@@ -484,9 +493,15 @@ body.is-menu-closing .site-menu-toggle__icon span:nth-child(3) {
   width: min(920px, 100%);
   margin: 0 auto;
   padding: clamp(48px, 22vh, 200px) clamp(24px, 8vw, 140px) clamp(200px, 52vh, 420px);
-  max-height: calc((var(--viewport-unit) * 100) - (var(--safe-top) + var(--safe-bottom)));
-  overflow: hidden;
+  max-height: none;
+  overflow: visible;
   perspective: 1400px;
+}
+
+.sentences-layer {
+  position: relative;
+  overflow: visible;
+  max-height: none;
 }
 
 .sentence {
